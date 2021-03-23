@@ -52,7 +52,7 @@ function App() {
   return (
     <div className="App">
       <MaterialTable
-        title="Usuários"
+        title="Marvel Heroes"
         columns={colunas}
         data={(query) =>
           new Promise((resolve, reject) => {

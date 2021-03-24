@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import MaterialTable from "material-table";
 import axios from "axios";
 
 import "./App.css";
 
 function App() {
-  const [order, setOrder] = useState({ field: "name", order: "name" });
-
   const loadData = (resolve, reject, query) => {
     let url =
       "https://gateway.marvel.com/v1/public/characters?ts=emerson&apikey=7b0eb4dbf3375d03258105ffa79204ff&hash=b040881fe4b12a2c9dd797071055c52d";
     //url += "per_page=" + query.pageSize; ou page_size
     //url += "&page=" + (query.page + 1);
+    console.log(query);
+    let orderBy = "";
+    let direction = "";
+    if (query.orderDirection === "desc") {
+      direction = "-";
+    }
+    if (query.orderBy) {
+      orderBy = direction + query.orderBy.field;
+    }
 
     axios
       .get(url, {
         params: {
           limit: query.pageSize,
           offset: query.page + 1,
-          orderBy: order.order,
+          orderBy: orderBy,
         },
       })
       .then((result) => {
-        console.log(result.data.data);
         resolve({
           data: result.data.data.results,
           page: result.data.data.offset - 1,
@@ -59,14 +65,6 @@ function App() {
             loadData(resolve, reject, query);
           })
         }
-        onOrderChange={(colId, ord) => {
-          let ordem = "name";
-          if (ord === "desc") {
-            ordem = "-name";
-          }
-
-          setOrder({ field: "name", order: ordem });
-        }}
       />
     </div>
   );

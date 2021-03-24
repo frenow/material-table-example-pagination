@@ -8,11 +8,10 @@ function App() {
   const loadData = (resolve, reject, query) => {
     let url =
       "https://gateway.marvel.com/v1/public/characters?ts=emerson&apikey=7b0eb4dbf3375d03258105ffa79204ff&hash=b040881fe4b12a2c9dd797071055c52d";
-    //url += "per_page=" + query.pageSize; ou page_size
-    //url += "&page=" + (query.page + 1);
     console.log(query);
     let orderBy = "";
     let direction = "";
+    let params = "";
     if (query.orderDirection === "desc") {
       direction = "-";
     }
@@ -20,13 +19,22 @@ function App() {
       orderBy = direction + query.orderBy.field;
     }
 
-    axios
-      .get(url, {
-        params: {
+    query.search
+      ? (params = {
           limit: query.pageSize,
           offset: query.page + 1,
           orderBy: orderBy,
-        },
+          nameStartsWith: query.search,
+        })
+      : (params = {
+          limit: query.pageSize,
+          offset: query.page + 1,
+          orderBy: orderBy,
+        });
+
+    axios
+      .get(url, {
+        params: params,
       })
       .then((result) => {
         resolve({

@@ -51,7 +51,7 @@ function App() {
       ),
     },
     { title: "Id", field: "id", sorting: false },
-    { title: "Name", field: "name" },
+    { title: "Name", field: "name", defaultSort: "asc" },
     { title: "Description", field: "description", sorting: false },
   ];
 

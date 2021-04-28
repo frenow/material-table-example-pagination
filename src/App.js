@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import MaterialTable from "material-table";
 import axios from "axios";
 
 import "./App.css";
 
 function App() {
+
+  const [selectedRowId, setSelectedRowId] = useState(null);
+  const [selected, setSelected] = useState(false);
+
   const loadData = (resolve, reject, query) => {
     let url =
       "https://gateway.marvel.com/v1/public/characters?ts=emerson&apikey=7b0eb4dbf3375d03258105ffa79204ff&hash=b040881fe4b12a2c9dd797071055c52d";
@@ -68,6 +72,32 @@ function App() {
       <MaterialTable
         title="Marvel Heroes"
         columns={colunas}
+
+        options={{
+          rowStyle: rowData => ({
+            backgroundColor:
+              selected &&
+              rowData.tableData.id === selectedRowId
+                ? "#87CEEB"
+                : "#FFF"
+          })
+        }} 
+        actions={[
+          {
+            icon: () => <button>Editar</button>,
+            onClick: (event, rowData) =>
+              new Promise((resolve, reject) => {
+                if (rowData.tableData.id === selectedRowId){
+                  setSelected(false);
+                  setSelectedRowId(null);
+                } else {
+                  setSelected(true);
+                  setSelectedRowId(rowData.tableData.id);
+                }
+              }),
+          },
+        ]}
+
         data={(query) =>
           new Promise((resolve, reject) => {
             loadData(resolve, reject, query);
